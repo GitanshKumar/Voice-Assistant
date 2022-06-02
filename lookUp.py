@@ -1,12 +1,11 @@
 import os
 import webbrowser
-import threading
 from wikipedia import summary
 
 open_dict = {"chrome": "C:/Program Files/Google/Chrome/Application/chrome.exe",
             "vscode": "C:/Users/gitan/AppData/Local/Programs/Microsoft VS Code/Code.exe",
             "whatsapp":"C:/Users/gitan/AppData/Local/WhatsApp/WhatsApp.exe",
-            "blender":"C:/Program Files/Blender Foundation/Blender 2.93/blender.exe",
+            "blender":"C:/Program Files/Blender Foundation/Blender 3.0/blender-launcher.exe",
             "opera":"C:/Program Files/Opera/launcher.exe",
             "exlporer":"explorer",
             "notepad":"notepad",
@@ -20,8 +19,8 @@ open_dict = {"chrome": "C:/Program Files/Google/Chrome/Application/chrome.exe",
             "youtube":"https://youtube.com",
             "wikipedia":"https://wikipedia.com"}
 
-chrome = "C:/Program Files/Google/Chrome/Application/chrome.exe %s"
-opera = "C:/Program Files/Opera/launcher.exe %s"
+chrome = "C:/Program Files/Google/Chrome/Application/chrome.exe %s &"
+opera = "C:/Program Files/Opera/launcher.exe %s &"
 
 google = "https://google.com/search?q=%s"
 bing = "https://bing.com/search?q=%s"
@@ -36,7 +35,7 @@ def websearch(query:str, browser_n:str, engine:str) -> None:
     engine -> search with given search engine
     """
     browser = webbrowser.get(browser_n)
-    threading.Timer(0.2, browser.open_new_tab, args= [engine%query])
+    browser.open_new_tab(url= engine%query)
     
 
 def get_info(query: str) -> str:
@@ -59,11 +58,14 @@ def open(query_name:str, browser = chrome) -> bool:
     if "https" in to_open:
         webbrowser.get(browser).open_new_tab(url= to_open)
     else:
-        os.startfile(to_open)
-    return 1
+        try:
+            os.startfile(to_open)
+            return 1
+        except FileNotFoundError:
+            return 0
 
 def close(app_name:str) -> bool:
     os.system("TASKKILL /F /IM " + app_name + ".exe")
 
 if __name__ == "__main__":
-    open("chrome")
+    get_info("narendra modi")
